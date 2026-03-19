@@ -51,7 +51,7 @@ class Carpark:
         self.name = data["name_en"]
         self.district = data["district_en"]
         self.latitude = data["latitude"]
-        self.longtitude = data["longtitude"]
+        self.longitude = data["longitude"]
     
     def __repr__(self):
         return str(self.park_id)
@@ -77,42 +77,63 @@ def group_by_district(
 def print_summary(data: dict[str, list[Carpark]]) -> None:
     """Print a summary table showing car park statistics."""
     print(f"{"District":21}{"Midpoint of car parks":26}{"# Car parks":11}")
-    midlas = {dist: sum([car_park.latitude for car_park in data[dist]])/len(data[dist]) for dist in str}
-    midlongs = {dist: sum([car_park.longtitude for car_park in data[dist]]/len(data[dist])) for dist in str}
-    for midla, midlong, dist in midlas, midlongs, data.keys():
-        print(f"{dist:21}({midla:>9.5}, {midlong:>9.5})    {len(data[dist]):11}")
+    midlas = [sum([car_park.latitude for car_park in data[dist]])/len(data[dist]) for dist in data.keys()]
+    midlongs = [sum([car_park.longitude for car_park in data[dist]])/len(data[dist]) for dist in data.keys()]
+    for midla, midlong, dist in zip(midlas, midlongs, data.keys()):
+        print(f"{dist:21}({midla:>9.5f}, {midlong:>9.5f})    {len(data[dist]):11}")
 
 
 class KMeans:
     """A class that implements the k-means clustering algorithm."""
     def __init__(self, n_clusters=3, max_iter=100, tol=1e-5):
         # TODO: Add your code for part (e) and remove this line
-        ...
+        self.n_clusters = n_clusters
+        self.max_iter = max_iter
+        self.tol = tol
+        self.centroids = []
 
     def fit(self, data: list[Point]) -> None:
         # TODO: Add your code for part (e) and remove this line
-        ...
+        self.centroids = random.sample(data, self.n_clusters)
+        for i in range(self.max_iter):
+            clusters = [[] for _ in range(self.n_clusters)]
+            new_centroids = []
+            for point in data:
+                clusters[self._closest_centroid(point)].append(point)
+            for j in range(self.n_clusters):
+                new_centroids.append(self._mean(clusters[j]))
+            if self._has_converged(self.centroids, new_centroids):
+                self.centroids = new_centroids
+                break
+            else:
+                self.centroids = new_centroids
 
+            
     def _closest_centroid(self, point: Point) -> int:
-        # TODO: Add your code for part (e) and remove this line
-        ...
+        distances = [self._euclidean_distance(point, centriod) for centriod in self.centroids]
+        return distances.index(min(distances))
 
     def _euclidean_distance(self, point1: Point, point2: Point) -> float:
-        # TODO: Add your code for part (e) and remove this line
-        ...
+        return math.sqrt((point1[0] - point2[0])**2 + (point1[1] - point2[1])**2)
 
     def _mean(self, cluster: list[Point]) -> Point:
-        # TODO: Add your code for part (e) and remove this line
-        ...
+        if len(cluster) == 0:
+            return [0.0, 0.0]
+        else:
+            mean_x = sum([point[0] for point in cluster])/len(cluster)
+            mean_y = sum([point[1] for point in cluster])/len(cluster)
+            return [mean_x, mean_y]
+        
 
     def _has_converged(self, old_centroids: list[Point],
                        new_centroids: list[Point]) -> bool:
-        # TODO: Add your code for part (e) and remove this line
-        ...
+        for i in range(len(old_centroids)):
+            if self._euclidean_distance(old_centroids[i], new_centroids[i]) >= self.tol:
+                return False
+        return True
 
     def predict(self, data: list[Point]) -> list[int]:
-        # TODO: Add your code for part (e) and remove this line
-        ...
+        return [self._closest_centroid(point) for point in data]
 
 
 if __name__ == "__main__":
