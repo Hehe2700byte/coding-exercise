@@ -65,8 +65,8 @@ class NaiveBayesClassifier:
         # TODO: Add your code (and remove this line)
         X = []
         y = []
-
-        
+        with open(filename, "r") as f:
+            ...
 # Example usage
 if __name__ == "__main__":
     # Small training dataset
