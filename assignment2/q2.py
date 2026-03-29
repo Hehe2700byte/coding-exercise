@@ -1,5 +1,6 @@
 # Import anything here from the Python Standard Library if you see fit.
 import math
+import csv
 
 class NaiveBayesClassifier:
     def __init__(self):
@@ -20,7 +21,7 @@ class NaiveBayesClassifier:
         for text, label in zip(X, y):
             text = text.lower()
             label = label.lower()
-            words = text.split(" ")
+            words = text.split()
             self.vocabulary.update(words)
             label_counts[label] = label_counts.get(label, 0) + 1
             for word in words:
@@ -28,7 +29,7 @@ class NaiveBayesClassifier:
                     self.word_counts[label] = {}
                 self.word_counts[label][word] = self.word_counts[label].get(word, 0) + 1
         
-        self.class_priors = {class_name: label_counts[class_name]/N for class_name in y}
+        self.class_priors = {label: count/N for label, count in label_counts.items()}
     
 
     def predict(self, text: str) -> tuple[str, dict[str, float]]:
@@ -62,11 +63,19 @@ class NaiveBayesClassifier:
         Returns:
         tuple: (X, y) where X is a list of documents and y is a list of labels
         """
-        # TODO: Add your code (and remove this line)
         X = []
         y = []
-        with open(filename, "r") as f:
-            ...
+        with open(filename, "r", newline = '', encoding = 'utf-8') as f:
+            reader = csv.reader(f)
+            next(reader)
+            for line in reader:
+                label = line[0]
+                text = line[1].strip()
+                X.append(text)
+                y.append(label)
+
+        return y,X
+            
 # Example usage
 if __name__ == "__main__":
     # Small training dataset
