@@ -54,8 +54,8 @@ class HumanPlayer(Player):
                 move = input(f"Player {self.color.value}'s turn: ")
                 move = move.upper()
                 address, rotation = move.split()
-                y = ord(address[0]) - ord('A')
-                x = int(address[1]) - 1
+                x = ord(address[0]) - ord('A')
+                y = int(address[1]) - 1
                 direction = Dir(rotation[0])
                 quadrant = int(rotation[1])
                 if quadrant not in range(1, 5):
@@ -222,10 +222,11 @@ class Pentago(BoardGame, Matrix):
         col_start, col_end = (0, mid) if quadrant in [1, 3] else (mid, self.n)
         rotate_matrix = self.sub_matrix(row_start, row_end, col_start, col_end)
         rotate_matrix.transpose()
-        rotate_matrix.reverse()
+        rotate_matrix.reverse(reverse_bool)
         for i in range(row_start, row_end):
             for j in range(col_start, col_end):
-                self.cells[i][j] = rotate_matrix.cells[i-row_start][j-col_end]
+                self.cells[i][j] = rotate_matrix.cells[i-row_start][j-col_start]
+        print(f"Quadrant {quadrant} rotated {direction.name.lower()}")
                         
 
     def get_marble(self, y: int, x: int) -> Marble | None:
@@ -261,12 +262,14 @@ class Pentago(BoardGame, Matrix):
                 if values == [p.color.value] * self.line_len:
                     num_lines += 1
         #diagonal
-        diagonals1 = [self.cells[i][i].color for i in range(self.n)]
-        diagonals2 = [self.cells[i][self.n - i].color for i in range(self.n)]
+        diagonals1 = [self.cells[i][i] for i in range(self.n)]
+        diagonals2 = [self.cells[i][self.n - i - 1] for i in range(self.n)]
+        values1 = [cell.color.value if cell else None for cell in diagonals1]
+        values2 = [cell.color.value if cell else None for cell in diagonals2]
         for i in range(self.n - self.line_len + 1):
-            if diagonals1[i:i+self.line_len] == [p.color.value] * self.line_len:
+            if values1[i:i+self.line_len] == [p.color.value] * self.line_len:
                 num_lines += 1
-            if diagonals2[i:i+self.line_len] == [p.color.value] * self.line_len:
+            if values2[i:i+self.line_len] == [p.color.value] * self.line_len:
                 num_lines += 1
         
         return num_lines
@@ -285,8 +288,8 @@ class Pentago(BoardGame, Matrix):
         """
         Updates player line counts and checks if a win or draw has occurred.
         """
-        self.players[0].lines = Pentago.count_lines(self, self.players[0])
-        self.players[1].lines = Pentago.count_lines(self, self.players[1])
+        self.players[0].lines = self.count_lines(self.players[0])
+        self.players[1].lines = self.count_lines(self.players[1])
         if self.players[0].lines > self.players[1].lines:
             self.winner = self.players[0]
         elif self.players[0].lines < self.players[1].lines:
@@ -318,32 +321,33 @@ class Pentago(BoardGame, Matrix):
         """
         Executes the main game loop, handling turns, moves, and rotations.
         """
-        round = 0
+        self.initialize_board([[None for _ in range(self.n)] for _ in range(self.n)])
+        round = 1
         while True:
-            Pentago.initialize_board(self, [[None for _ in range(self.n)] for _ in range(self.n)])
             print(f"Round {round}:")
-            Pentago.print_board(self)
+            round += 1
+            self.print_board()
             Current_player = self.current_player
             while True:
                 try:
-                    move = HumanPlayer.get_move(self.current_player)
-                    if not Pentago.is_valid_move(self, move[0], move[1]) or self.get_marble(move[0], move[1]) is not None:
+                    move = Current_player.get_move()
+                    if not self.is_valid_move(move[0], move[1]) or self.get_marble(move[0], move[1]) is not None:
                         raise ValueError
                     break
                 except ValueError:
                     print("Invalid move!")
-            self.cells[move[1]][move[0]] = Current_player.color.value
-            if not Pentago.is_game_over(self):
-                Pentago.rotate_quadrant(self, move[3], move[2])
-                if not Pentago.is_game_over(self):
-                    BoardGame.switch_player(self)
+            self.make_move(move[0], move[1], Current_player)
+            if not self.is_game_over():
+                self.rotate_quadrant(move[3], move[2])
+                if not self.is_game_over():
+                    self.switch_player()
                 else:
                     print("Game over:")
                     break
             else:
                 print("Game over:")
                 break
-        Pentago.print_board(self)
+        self.print_board()
         print(f"Player X: {self.players[0].lines} line(s); Player O: {self.players[1].lines} line(s)")
         print("Draw game") if self.winner == None else print(f"Player {self.winner.color.value} wins!")
 
