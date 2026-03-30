@@ -53,17 +53,19 @@ class HumanPlayer(Player):
             try:
                 move = input(f"Player {self.color.value}'s turn: ")
                 move = move.upper()
-                address, rotation = move.split()
-                x = ord(address[0]) - ord('A')
-                y = int(address[1]) - 1
-                direction = Dir(rotation[0])
-                quadrant = int(rotation[1])
-                if quadrant not in range(1, 5):
+                parts = move.split()
+                if len(parts) != 2:
                     raise ValueError
-                return y, x, direction, quadrant
-            except ValueError:
+                address, rotate = parts
+                y = int(address[1:]) - 1
+                x = ord(address[0]) - ord('A')
+                dir = Dir(rotate[0])
+                quar = int(rotate[1:])
+                if quar not in range(1, 5):
+                    raise ValueError
+                return y, x, dir, quar
+            except (ValueError, KeyError, IndexError) :
                 print("Invalid format! Enter [Cell][Space][Dir][Quad]")
-
 
 class Matrix:
     """A class to represent and manipulate a 2D grid of elements.
@@ -294,8 +296,13 @@ class Pentago(BoardGame, Matrix):
             self.winner = self.players[0]
         elif self.players[0].lines < self.players[1].lines:
             self.winner = self.players[1]
-        if self.players[0].lines >= 1 or self.players[1].lines >= 1 or not Pentago.count_blanks(self):
+        else:
+            self.winner = None
+        if self.players[0].lines >= 1 or self.players[1].lines >= 1 or not self.count_blanks():
             return True
+        else:
+            return False
+        
 
     def print_board(self) -> None:
         """
@@ -322,34 +329,29 @@ class Pentago(BoardGame, Matrix):
         Executes the main game loop, handling turns, moves, and rotations.
         """
         self.initialize_board([[None for _ in range(self.n)] for _ in range(self.n)])
-        round = 1
+        round_num = 1
         while True:
-            print(f"Round {round}:")
-            round += 1
+            print(f"Round {round_num}:")
+            round_num += 1
             self.print_board()
             Current_player = self.current_player
             while True:
-                try:
-                    move = Current_player.get_move()
-                    if not self.is_valid_move(move[0], move[1]) or self.get_marble(move[0], move[1]) is not None:
-                        raise ValueError
+                move = Current_player.get_move()
+                if self.is_valid_move(move[0], move[1]):
                     break
-                except ValueError:
-                    print("Invalid move!")
+                print("Invalid move!")  
             self.make_move(move[0], move[1], Current_player)
-            if not self.is_game_over():
-                self.rotate_quadrant(move[3], move[2])
-                if not self.is_game_over():
-                    self.switch_player()
-                else:
-                    print("Game over:")
-                    break
-            else:
-                print("Game over:")
+            if self.is_game_over():
                 break
+            self.rotate_quadrant(move[3], move[2])
+            if self.is_game_over():
+                break
+            self.switch_player()
+
+        print("Game over:")
         self.print_board()
         print(f"Player X: {self.players[0].lines} line(s); Player O: {self.players[1].lines} line(s)")
-        print("Draw game") if self.winner == None else print(f"Player {self.winner.color.value} wins!")
+        print("Draw game!") if self.winner == None else print(f"Player {self.winner.color.value} wins!")
 
 
 # Sample client code

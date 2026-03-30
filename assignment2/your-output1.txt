@@ -1,0 +1,271 @@
+Enter board size [default 6]: Round 1:
+    A B C   D E F
+  +-------+-------+
+1 | . . . | . . . |
+2 | . . . | . . . |
+3 | . . . | . . . |
+  +-------+-------+
+4 | . . . | . . . |
+5 | . . . | . . . |
+6 | . . . | . . . |
+  +-------+-------+
+Player X's turn: Invalid format! Enter [Cell][Space][Dir][Quad]
+Player X's turn: Invalid format! Enter [Cell][Space][Dir][Quad]
+Player X's turn: Invalid format! Enter [Cell][Space][Dir][Quad]
+Player X's turn: Invalid format! Enter [Cell][Space][Dir][Quad]
+Player X's turn: Invalid move!
+Player X's turn: Invalid move!
+Player X's turn: Quadrant 2 rotated clockwise
+Round 2:
+    A B C   D E F
+  +-------+-------+
+1 | X . . | . . . |
+2 | . . . | . . . |
+3 | . . . | . . . |
+  +-------+-------+
+4 | . . . | . . . |
+5 | . . . | . . . |
+6 | . . . | . . . |
+  +-------+-------+
+Player O's turn: Quadrant 2 rotated clockwise
+Round 3:
+    A B C   D E F
+  +-------+-------+
+1 | X . . | . . . |
+2 | . . . | . . . |
+3 | O . . | . . . |
+  +-------+-------+
+4 | . . . | . . . |
+5 | . . . | . . . |
+6 | . . . | . . . |
+  +-------+-------+
+Player X's turn: Quadrant 2 rotated clockwise
+Round 4:
+    A B C   D E F
+  +-------+-------+
+1 | X . X | . . . |
+2 | . . . | . . . |
+3 | O . . | . . . |
+  +-------+-------+
+4 | . . . | . . . |
+5 | . . . | . . . |
+6 | . . . | . . . |
+  +-------+-------+
+Player O's turn: Quadrant 2 rotated clockwise
+Round 5:
+    A B C   D E F
+  +-------+-------+
+1 | X . X | . . . |
+2 | . O . | . . . |
+3 | O . . | . . . |
+  +-------+-------+
+4 | . . . | . . . |
+5 | . . . | . . . |
+6 | . . . | . . . |
+  +-------+-------+
+Player X's turn: Quadrant 2 rotated clockwise
+Round 6:
+    A B C   D E F
+  +-------+-------+
+1 | X . X | . . . |
+2 | . O . | . . . |
+3 | O . . | . . . |
+  +-------+-------+
+4 | . . . | . . . |
+5 | . . . | . . . |
+6 | X . . | . . . |
+  +-------+-------+
+Player O's turn: Quadrant 2 rotated clockwise
+Round 7:
+    A B C   D E F
+  +-------+-------+
+1 | X . X | . . . |
+2 | . O . | . . . |
+3 | O . . | . . . |
+  +-------+-------+
+4 | . . . | . . . |
+5 | O . . | . . . |
+6 | X . . | . . . |
+  +-------+-------+
+Player X's turn: Quadrant 2 rotated clockwise
+Round 8:
+    A B C   D E F
+  +-------+-------+
+1 | X . X | . . . |
+2 | . O . | . . . |
+3 | O . . | . . . |
+  +-------+-------+
+4 | . . . | . . . |
+5 | O X . | . . . |
+6 | X . . | . . . |
+  +-------+-------+
+Player O's turn: Quadrant 2 rotated clockwise
+Round 9:
+    A B C   D E F
+  +-------+-------+
+1 | X . X | . . . |
+2 | . O . | . . . |
+3 | O . . | . . . |
+  +-------+-------+
+4 | . O . | . . . |
+5 | O X . | . . . |
+6 | X . . | . . . |
+  +-------+-------+
+Player X's turn: Quadrant 2 rotated clockwise
+Round 10:
+    A B C   D E F
+  +-------+-------+
+1 | X . X | . . . |
+2 | . O . | . . . |
+3 | O . . | . . . |
+  +-------+-------+
+4 | . O X | . . . |
+5 | O X . | . . . |
+6 | X . . | . . . |
+  +-------+-------+
+Player O's turn: Quadrant 2 rotated clockwise
+Round 11:
+    A B C   D E F
+  +-------+-------+
+1 | X . X | . . . |
+2 | . O . | . . . |
+3 | O . . | . . . |
+  +-------+-------+
+4 | . O X | . . . |
+5 | O X . | . . . |
+6 | X . O | . . . |
+  +-------+-------+
+Player X's turn: Quadrant 4 rotated clockwise
+Round 12:
+    A B C   D E F
+  +-------+-------+
+1 | X . X | X . . |
+2 | . O . | . . . |
+3 | O . . | . . . |
+  +-------+-------+
+4 | . O X | . . . |
+5 | O X . | . . . |
+6 | X . O | . . . |
+  +-------+-------+
+Player O's turn: Quadrant 4 rotated clockwise
+Round 13:
+    A B C   D E F
+  +-------+-------+
+1 | X . X | X . . |
+2 | . O . | . . . |
+3 | O . . | O . . |
+  +-------+-------+
+4 | . O X | . . . |
+5 | O X . | . . . |
+6 | X . O | . . . |
+  +-------+-------+
+Player X's turn: Quadrant 4 rotated clockwise
+Round 14:
+    A B C   D E F
+  +-------+-------+
+1 | X . X | X . X |
+2 | . O . | . . . |
+3 | O . . | O . . |
+  +-------+-------+
+4 | . O X | . . . |
+5 | O X . | . . . |
+6 | X . O | . . . |
+  +-------+-------+
+Player O's turn: Quadrant 4 rotated clockwise
+Round 15:
+    A B C   D E F
+  +-------+-------+
+1 | X . X | X . X |
+2 | . O . | . . . |
+3 | O . . | O O . |
+  +-------+-------+
+4 | . O X | . . . |
+5 | O X . | . . . |
+6 | X . O | . . . |
+  +-------+-------+
+Player X's turn: Quadrant 4 rotated clockwise
+Round 16:
+    A B C   D E F
+  +-------+-------+
+1 | X . X | X . X |
+2 | . O . | . X . |
+3 | O . . | O O . |
+  +-------+-------+
+4 | . O X | . . . |
+5 | O X . | . . . |
+6 | X . O | . . . |
+  +-------+-------+
+Player O's turn: Quadrant 4 rotated clockwise
+Round 17:
+    A B C   D E F
+  +-------+-------+
+1 | X . X | X . X |
+2 | . O . | . X . |
+3 | O . . | O O . |
+  +-------+-------+
+4 | . O X | . . . |
+5 | O X . | O . . |
+6 | X . O | . . . |
+  +-------+-------+
+Player X's turn: Quadrant 4 rotated clockwise
+Round 18:
+    A B C   D E F
+  +-------+-------+
+1 | X . X | X . X |
+2 | . O . | . X . |
+3 | O . . | O O . |
+  +-------+-------+
+4 | . O X | . O . |
+5 | O X . | . X . |
+6 | X . O | . . . |
+  +-------+-------+
+Player O's turn: Quadrant 4 rotated clockwise
+Round 19:
+    A B C   D E F
+  +-------+-------+
+1 | X . X | X . X |
+2 | . O . | . X . |
+3 | O . . | O O . |
+  +-------+-------+
+4 | . O X | . . . |
+5 | O X . | . X O |
+6 | X . O | . . O |
+  +-------+-------+
+Player X's turn: Quadrant 4 rotated anticlockwise
+Round 20:
+    A B C   D E F
+  +-------+-------+
+1 | X . X | X . X |
+2 | . O . | . X X |
+3 | O . . | O O . |
+  +-------+-------+
+4 | . O X | . O O |
+5 | O X . | . X . |
+6 | X . O | . . . |
+  +-------+-------+
+Player O's turn: Quadrant 4 rotated clockwise
+Round 21:
+    A B C   D E F
+  +-------+-------+
+1 | X . X | X . X |
+2 | . O . | . X X |
+3 | O . . | O O . |
+  +-------+-------+
+4 | . O X | . . O |
+5 | O X . | . X O |
+6 | X . O | . . O |
+  +-------+-------+
+Player X's turn: Quadrant 2 rotated anticlockwise
+Game over:
+    A B C   D E F
+  +-------+-------+
+1 | X X X | X X . |
+2 | . O . | . X O |
+3 | O . . | X . O |
+  +-------+-------+
+4 | . O X | . . O |
+5 | O X . | . X O |
+6 | X . O | . . O |
+  +-------+-------+
+Player X: 2 line(s); Player O: 1 line(s)
+Player X wins!
