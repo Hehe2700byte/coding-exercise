@@ -246,35 +246,35 @@ class Pentago(BoardGame, Matrix):
         the specified player's color.
         """
         num_lines = 0
-        #horizontally
-        for i in range(self.n):
-            for j in range(self.n - self.line_len + 1):
-                cell_slice = self.cells[i][j:j+self.line_len]
-                values = [cell.color.value if cell else None for cell in cell_slice]
-                if values == [p.color.value] * self.line_len:
-                    num_lines += 1
-
-        #vertibally
-        cells_copy = Matrix(self.n, self.n, self.cells)
-        cells_copy.transpose()
-        for i in range(self.n):
-            for j in range(self.n - self.line_len + 1):
-                cell_slice = cells_copy.cells[i][j:j+self.line_len]
-                values = [cell.color.value if cell else None for cell in cell_slice]
-                if values == [p.color.value] * self.line_len:
-                    num_lines += 1
-        #diagonal
-        diagonals1 = [self.cells[i][i] for i in range(self.n)]
-        diagonals2 = [self.cells[i][self.n - i - 1] for i in range(self.n)]
-        values1 = [cell.color.value if cell else None for cell in diagonals1]
-        values2 = [cell.color.value if cell else None for cell in diagonals2]
-        for i in range(self.n - self.line_len + 1):
-            if values1[i:i+self.line_len] == [p.color.value] * self.line_len:
-                num_lines += 1
-            if values2[i:i+self.line_len] == [p.color.value] * self.line_len:
-                num_lines += 1
+        DX = [0, 1, 1, 1]
+        DY = [-1, -1, 0, 1]
+        for r in range(self.n):
+            for c in range(self.n):
+                marble = self.cells[r][c]
+                if marble is None or marble.color.value != p.color.value:
+                    continue
+                for dr, dc in zip(DX, DY):
+                    prev_r, prev_c = r - dr, c - dc
+                    if prev_c in range(self.n) and prev_r in range(self.n):
+                        prev_marble = self.cells[prev_r][prev_c]
+                        if prev_marble and prev_marble.color.value == p.color.value:
+                            continue
+                    
+                    count = 0
+                    curr_r, curr_c = r, c
+                    while curr_r in range(self.n) and curr_c in range(self.n):
+                        curr_marble = self.cells[curr_r][curr_c]
+                        if curr_marble and curr_marble.color.value == p.color.value:
+                            count += 1
+                            curr_r += dr
+                            curr_c += dc
+                        else:
+                            break
+                    if count >= self.line_len:
+                        num_lines += 1
         
         return num_lines
+
 
     def is_valid_move(self, y: int, x: int) -> bool:
         """Checks if a move is valid, i.e., the specified coordinates are
