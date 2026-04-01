@@ -2,6 +2,7 @@
 import math
 import csv
 
+
 class NaiveBayesClassifier:
     def __init__(self):
         self.class_priors = {}
@@ -27,10 +28,13 @@ class NaiveBayesClassifier:
             for word in words:
                 if label not in self.word_counts:
                     self.word_counts[label] = {}
-                self.word_counts[label][word] = self.word_counts[label].get(word, 0) + 1
-        
-        self.class_priors = {label: count/N for label, count in label_counts.items()}
-    
+                self.word_counts[label][word] = (
+                    self.word_counts[label].get(word, 0) + 1
+                )
+
+        self.class_priors = {
+            label: count / N for label, count in label_counts.items()
+        }
 
     def predict(self, text: str) -> tuple[str, dict[str, float]]:
         """
@@ -46,10 +50,19 @@ class NaiveBayesClassifier:
         words = text.split()
         scores = {}
         for label in self.class_priors.keys():
-            p = [math.log10((self.word_counts[label].get(word, 0) + 1)/(sum(self.word_counts[label].values()) + len(self.vocabulary))) for word in words]
+            p = [
+                math.log10(
+                    (self.word_counts[label].get(word, 0) + 1)
+                    / (
+                        sum(self.word_counts[label].values())
+                        + len(self.vocabulary)
+                    )
+                )
+                for word in words
+            ]
             scores[label] = math.log10(self.class_priors[label]) + sum(p)
-        
-        label_max = max(scores, key = scores.get)
+
+        label_max = max(scores, key=scores.get)
         return label_max, scores
 
     @staticmethod
@@ -65,7 +78,7 @@ class NaiveBayesClassifier:
         """
         X = []
         y = []
-        with open(filename, "r", newline = '', encoding = 'utf-8') as f:
+        with open(filename, "r", newline="", encoding="utf-8") as f:
             reader = csv.reader(f)
             next(reader)
             for line in reader:
@@ -74,8 +87,9 @@ class NaiveBayesClassifier:
                 X.append(text)
                 y.append(label)
 
-        return y,X
-            
+        return y, X
+
+
 # Example usage
 if __name__ == "__main__":
     # Small training dataset
@@ -107,7 +121,7 @@ if __name__ == "__main__":
     print(f"Predicted class for '{text_to_predict}': {predicted_class}\n")
 
     # Load a large training dataset from a CSV file
-    y_train, X_train = NaiveBayesClassifier.load_data('q2_tweets.csv')
+    y_train, X_train = NaiveBayesClassifier.load_data("q2_tweets.csv")
 
     # Create and train the classifier
     tweets_classifier = NaiveBayesClassifier()
@@ -126,7 +140,7 @@ if __name__ == "__main__":
     correct_predictions = 0
     for true_label, text_to_predict in test_set:
         predicted_class, _ = tweets_classifier.predict(text_to_predict)
-        correct = (predicted_class == true_label)
+        correct = predicted_class == true_label
         correct_predictions += correct
         print(predicted_class, correct)
     print(f"Accuracy: {correct_predictions / len(test_set):.2%}")

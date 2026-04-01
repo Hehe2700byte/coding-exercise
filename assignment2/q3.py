@@ -5,13 +5,13 @@ from copy import deepcopy
 
 
 class Color(Enum):
-    BLACK = 'X'
-    WHITE = 'O'
+    BLACK = "X"
+    WHITE = "O"
 
 
 class Dir(Enum):
-    CLOCKWISE = 'C'
-    ANTICLOCKWISE = 'A'
+    CLOCKWISE = "C"
+    ANTICLOCKWISE = "A"
 
 
 class Player(ABC):
@@ -20,6 +20,7 @@ class Player(ABC):
     Attributes:
         color (Color): The piece color assigned to the player.
     """
+
     def __init__(self, color: Color):
         self.color = color
 
@@ -41,6 +42,7 @@ class HumanPlayer(Player):
     Attributes:
     lines (int): The count of lines (contiguous pieces) made by the player.
     """
+
     def __init__(self, color: Color):
         super().__init__(color)
         self.lines = 0
@@ -58,14 +60,15 @@ class HumanPlayer(Player):
                     raise ValueError
                 address, rotate = parts
                 y = int(address[1:]) - 1
-                x = ord(address[0]) - ord('A')
+                x = ord(address[0]) - ord("A")
                 dir = Dir(rotate[0])
                 quar = int(rotate[1:])
                 if quar not in range(1, 5):
                     raise ValueError
                 return y, x, dir, quar
-            except (ValueError, KeyError, IndexError) :
+            except (ValueError, KeyError, IndexError):
                 print("Invalid format! Enter [Cell][Space][Dir][Quad]")
+
 
 class Matrix:
     """A class to represent and manipulate a 2D grid of elements.
@@ -81,22 +84,25 @@ class Matrix:
         [[ 1  2]
          [ 3  4]]
     """
+
     def __init__(self, m: int, n: int, data: list[list[Any]] = None):
         """Initializes a matrix of size m x n with optional initial data."""
         self.m = m  # rows
         self.n = n  # columns
         self.cells = data if data else [[None] * n for _ in range(m)]
 
-    def sub_matrix(self,
-                   row_start: int, row_end: int,
-                   col_start: int, col_end: int) -> Self:
+    def sub_matrix(
+        self, row_start: int, row_end: int, col_start: int, col_end: int
+    ) -> Self:
         """
         Returns a new Matrix object representing a sliced portion of the
         current one.
         """
-        matrix_slice = [[self.cells[i][j] for j in range(col_start, col_end)] for i in range(row_start, row_end)]
+        matrix_slice = [
+            [self.cells[i][j] for j in range(col_start, col_end)]
+            for i in range(row_start, row_end)
+        ]
         return Matrix(row_end - row_start, col_end - col_start, matrix_slice)
-
 
     def transpose(self) -> None:
         """Flips the matrix over its diagonal, switching rows and columns."""
@@ -113,7 +119,6 @@ class Matrix:
             for j in range(self.m):
                 self.cells[j].reverse()
             self.transpose()
-        
 
     def __repr__(self) -> str:
         return self.__str__()
@@ -140,6 +145,7 @@ class BoardGame(ABC):
         current_player_index (int): Index of the player whose turn it is.
         winner (Player): The player who won the game. Defaults to None.
     """
+
     def __init__(self, players: list[Player]):
         """Sets up the game with a list of players and sets who plays first."""
         self.players = players
@@ -181,6 +187,7 @@ class Marble:
     Attributes:
         color (Color): The color of the marble.
     """
+
     def __init__(self, color):
         self.color = color
 
@@ -199,13 +206,13 @@ class Pentago(BoardGame, Matrix):
     Attributes:
         line_len (int): The number of marbles required in a line to win.
     """
+
     def __init__(self, n: int = 6):
         self.n = n
         self.players = [HumanPlayer(Color.BLACK), HumanPlayer(Color.WHITE)]
         super().__init__(self.players)
         super(BoardGame, self).__init__(n, n)
         self.line_len = n - 1
-
 
     def initialize_board(self, board: list[list[Marble]]) -> None:
         """Overwrites the current cells with a provided 2D list of Marbles."""
@@ -215,7 +222,8 @@ class Pentago(BoardGame, Matrix):
         self.cells = board
 
     def rotate_quadrant(
-            self, quadrant: int, direction: Dir = Dir.CLOCKWISE) -> None:
+        self, quadrant: int, direction: Dir = Dir.CLOCKWISE
+    ) -> None:
         """Rotates one of the four board quadrants 90 degrees in a given
         direction."""
         reverse_bool = True if direction == Dir.CLOCKWISE else False
@@ -227,9 +235,10 @@ class Pentago(BoardGame, Matrix):
         rotate_matrix.reverse(reverse_bool)
         for i in range(row_start, row_end):
             for j in range(col_start, col_end):
-                self.cells[i][j] = rotate_matrix.cells[i-row_start][j-col_start]
+                self.cells[i][j] = rotate_matrix.cells[i - row_start][
+                    j - col_start
+                ]
         print(f"Quadrant {quadrant} rotated {direction.name.lower()}")
-                        
 
     def get_marble(self, y: int, x: int) -> Marble | None:
         """Returns a marble at (y, x) or returns None if out of bounds."""
@@ -257,14 +266,20 @@ class Pentago(BoardGame, Matrix):
                     prev_r, prev_c = r - dr, c - dc
                     if prev_c in range(self.n) and prev_r in range(self.n):
                         prev_marble = self.cells[prev_r][prev_c]
-                        if prev_marble and prev_marble.color.value == p.color.value:
+                        if (
+                            prev_marble
+                            and prev_marble.color.value == p.color.value
+                        ):
                             continue
-                    
+
                     count = 0
                     curr_r, curr_c = r, c
                     while curr_r in range(self.n) and curr_c in range(self.n):
                         curr_marble = self.cells[curr_r][curr_c]
-                        if curr_marble and curr_marble.color.value == p.color.value:
+                        if (
+                            curr_marble
+                            and curr_marble.color.value == p.color.value
+                        ):
                             count += 1
                             curr_r += dr
                             curr_c += dc
@@ -272,9 +287,8 @@ class Pentago(BoardGame, Matrix):
                             break
                     if count >= self.line_len:
                         num_lines += 1
-        
-        return num_lines
 
+        return num_lines
 
     def is_valid_move(self, y: int, x: int) -> bool:
         """Checks if a move is valid, i.e., the specified coordinates are
@@ -298,11 +312,14 @@ class Pentago(BoardGame, Matrix):
             self.winner = self.players[1]
         else:
             self.winner = None
-        if self.players[0].lines >= 1 or self.players[1].lines >= 1 or not self.count_blanks():
+        if (
+            self.players[0].lines >= 1
+            or self.players[1].lines >= 1
+            or not self.count_blanks()
+        ):
             return True
         else:
             return False
-        
 
     def print_board(self) -> None:
         """
@@ -319,8 +336,8 @@ class Pentago(BoardGame, Matrix):
         for i, row in enumerate(board):
             if i == mid:
                 print(h_rule)
-            left = " ".join(map(lambda x: str(x) if x else '.', row[:mid]))
-            right = " ".join(map(lambda x: str(x) if x else '.', row[mid:]))
+            left = " ".join(map(lambda x: str(x) if x else ".", row[:mid]))
+            right = " ".join(map(lambda x: str(x) if x else ".", row[mid:]))
             print(f"{i + 1:>{len(pad)-1}} | {left} | {right} |")
         print(h_rule)
 
@@ -328,7 +345,9 @@ class Pentago(BoardGame, Matrix):
         """
         Executes the main game loop, handling turns, moves, and rotations.
         """
-        self.initialize_board([[None for _ in range(self.n)] for _ in range(self.n)])
+        self.initialize_board(
+            [[None for _ in range(self.n)] for _ in range(self.n)]
+        )
         round_num = 1
         while True:
             print(f"Round {round_num}:")
@@ -339,7 +358,7 @@ class Pentago(BoardGame, Matrix):
                 move = Current_player.get_move()
                 if self.is_valid_move(move[0], move[1]):
                     break
-                print("Invalid move!")  
+                print("Invalid move!")
             self.make_move(move[0], move[1], Current_player)
             if self.is_game_over():
                 break
@@ -350,8 +369,15 @@ class Pentago(BoardGame, Matrix):
 
         print("Game over:")
         self.print_board()
-        print(f"Player X: {self.players[0].lines} line(s); Player O: {self.players[1].lines} line(s)")
-        print("Draw game!") if self.winner == None else print(f"Player {self.winner.color.value} wins!")
+        print(
+            f"Player X: {self.players[0].lines} line(s); "
+            f"Player O: {self.players[1].lines} line(s)"
+        )
+        (
+            print("Draw game!")
+            if self.winner is None
+            else print(f"Player {self.winner.color.value} wins!")
+        )
 
 
 # Sample client code

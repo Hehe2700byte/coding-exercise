@@ -3,6 +3,7 @@ import math
 import random
 import requests
 from typing import Any
+
 # Optional TODO: Add more standard Python modules if needed (remove this line)
 ...
 
@@ -33,8 +34,8 @@ def get_json_data(no_cache: bool = False) -> list[dict[str, Any]]:
         response.raise_for_status()
         json_string = response.content.decode("utf-8-sig")
         parks_info = json.loads(json_string)
-        with open("carparks.json", "w", encoding = "utf-8") as f:
-            json.dump(parks_info, f, indent = 4, ensure_ascii = False)
+        with open("carparks.json", "w", encoding="utf-8") as f:
+            json.dump(parks_info, f, indent=4, ensure_ascii=False)
         return parks_info["car_park"]
     except requests.exceptions.HTTPError as e:
         print(f"HTTP error: {e}")
@@ -46,22 +47,23 @@ def get_json_data(no_cache: bool = False) -> list[dict[str, Any]]:
 
 class Carpark:
     """A class that represents a car park."""
+
     def __init__(self, data: dict):
         self.park_id = data["park_id"]
         self.name = data["name_en"]
         self.district = data["district_en"]
         self.latitude = data["latitude"]
         self.longitude = data["longitude"]
-    
+
     def __repr__(self):
         return str(self.park_id)
-    
+
     def __str__(self):
         return f"{self.name} ({self.park_id})"
 
 
 def group_by_district(
-    json_data: list[dict[str, Any]]
+    json_data: list[dict[str, Any]],
 ) -> dict[str, list[Carpark]]:
     """Create and group the car park objects by district."""
     result = {}
@@ -70,21 +72,32 @@ def group_by_district(
         if car_park.district not in result.keys():
             result[car_park.district] = []
         result[car_park.district].append(car_park)
-    
+
     return result
 
 
 def print_summary(data: dict[str, list[Carpark]]) -> None:
     """Print a summary table showing car park statistics."""
     print(f"{"District":21}{"Midpoint of car parks":26}{"# Car parks":11}")
-    midlas = [sum([car_park.latitude for car_park in data[dist]])/len(data[dist]) for dist in data.keys()]
-    midlongs = [sum([car_park.longitude for car_park in data[dist]])/len(data[dist]) for dist in data.keys()]
+    midlas = [
+        sum([car_park.latitude for car_park in data[dist]]) / len(data[dist])
+        for dist in data.keys()
+    ]
+    midlongs = [
+        sum([car_park.longitude for car_park in data[dist]]) / len(data[dist])
+        for dist in data.keys()
+    ]
+    print('-' * 58)
     for midla, midlong, dist in zip(midlas, midlongs, data.keys()):
-        print(f"{dist:21}({midla:>9.5f}, {midlong:>9.5f})    {len(data[dist]):11}")
+        print(
+            f"{dist:21}({midla:>9.5f}, {midlong:>9.5f})    "
+            f"{len(data[dist]):<11}"
+        )
 
 
 class KMeans:
     """A class that implements the k-means clustering algorithm."""
+
     def __init__(self, n_clusters=3, max_iter=100, tol=1e-5):
         # TODO: Add your code for part (e) and remove this line
         self.n_clusters = n_clusters
@@ -108,27 +121,34 @@ class KMeans:
             else:
                 self.centroids = new_centroids
 
-            
     def _closest_centroid(self, point: Point) -> int:
-        distances = [self._euclidean_distance(point, centriod) for centriod in self.centroids]
+        distances = [
+            self._euclidean_distance(point, centriod)
+            for centriod in self.centroids
+        ]
         return distances.index(min(distances))
 
     def _euclidean_distance(self, point1: Point, point2: Point) -> float:
-        return math.sqrt((point1[0] - point2[0])**2 + (point1[1] - point2[1])**2)
+        return math.sqrt(
+            (point1[0] - point2[0]) ** 2 + (point1[1] - point2[1]) ** 2
+        )
 
     def _mean(self, cluster: list[Point]) -> Point:
         if len(cluster) == 0:
             return [0.0, 0.0]
         else:
-            mean_x = sum([point[0] for point in cluster])/len(cluster)
-            mean_y = sum([point[1] for point in cluster])/len(cluster)
+            mean_x = sum([point[0] for point in cluster]) / len(cluster)
+            mean_y = sum([point[1] for point in cluster]) / len(cluster)
             return [mean_x, mean_y]
-        
 
-    def _has_converged(self, old_centroids: list[Point],
-                       new_centroids: list[Point]) -> bool:
+    def _has_converged(
+        self, old_centroids: list[Point], new_centroids: list[Point]
+    ) -> bool:
         for i in range(len(old_centroids)):
-            if self._euclidean_distance(old_centroids[i], new_centroids[i]) >= self.tol:
+            if (
+                self._euclidean_distance(old_centroids[i], new_centroids[i])
+                >= self.tol
+            ):
                 return False
         return True
 
@@ -146,7 +166,7 @@ if __name__ == "__main__":
 
     # Print some example car parks
     print("Example Car Parks:\n" + "-" * 18)
-    for district in ['Eastern', 'Islands', 'Sha Tin']:
+    for district in ["Eastern", "Islands", "Sha Tin"]:
         print(f"First 5 car parks in {district}:", grouped_data[district][:5])
         for i, carpark in enumerate(grouped_data[district][:5]):
             print(i + 1, carpark)
