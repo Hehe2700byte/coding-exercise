@@ -1,0 +1,10 @@
+The sample input images are downloaded from the following links.
+Image courtesy of the following image sources:
+
+1. https://www.facebook.com/photo/?fbid=385246433761234&set=pb.100068276400950.-2207520000
+
+2. https://en.wikipedia.org/wiki/Cat#/media/File:Cat_August_2010-4.jpg
+
+3. https://www.rawpixel.com/image/6601273/ragdoll-cat-blob-shape-badge-pet-photo
+
+4. https://www.rawpixel.com/image/6564247/png-sticker-public-domain
